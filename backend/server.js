@@ -6,9 +6,12 @@ const colors = require("colors");
 const userRoutes = require("./routes/userRoutes");
 const chatRoutes = require("./routes/chatRoutes")
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
+var morgan = require('morgan')
+
 dotenv.config();
 connectDB();
 const app = express();
+app.use(morgan('combined'))
 
 app.use(express.json()); // to acceptjson file
 
