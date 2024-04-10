@@ -39,7 +39,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       );
       // console.log(messages);
 
-      setMessages(prevMessages => [...prevMessages, ...data]); // Merge new messages with existing ones
+      // setMessages(prevMessages => [...prevMessages, ...data]); // Merge new messages with existing ones
+      setMessages(data);
    
  
       setLoading(false);
