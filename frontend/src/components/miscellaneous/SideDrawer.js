@@ -59,8 +59,8 @@ const SideDrawer = () => {
         history.push('/')
     };
     
-    const handleSearch =  async() => {
-    if (!search) {
+    const handleSearch =  async(event) => {
+    if (!search && event.type === "click") {
       toast({
         title: "Please Enter something in search",
         status: "warning",
@@ -189,7 +189,9 @@ const SideDrawer = () => {
                 placeholder="Search by name or email"
                 mr={2}
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                 onChange={(e) => setSearch(e.target.value)}
+                onKeyDown={handleSearch}
+               
               />
               <Button onClick={handleSearch}>Go</Button>
             </Box>
