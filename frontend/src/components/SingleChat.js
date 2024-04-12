@@ -11,6 +11,7 @@ import axios from "axios";
 import "./styles.css";
 import ScrollableChat from "../components/ScrollableChat";
 import io from "socket.io-client";
+import logo from "./logo.jpg";
 
 const ENDPOINT = "http://localhost:5000";
 let socket;
@@ -78,10 +79,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     if (!socket) return;
 
     socket.on("message received", (newMessageReceived) => {
-      if (
-        !selectedChat ||
-        selectedChat._id !== newMessageReceived.chat._id
-      ) {
+      if (!selectedChat || selectedChat._id !== newMessageReceived.chat._id) {
         if (!notification.includes(newMessageReceived)) {
           setNotification([newMessageReceived, ...notification]);
           setFetchAgain(!fetchAgain);
@@ -170,11 +168,16 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         {!selectedChat.isGroupChat ? (
           <>
             {getSender(user, selectedChat.users)}
+            {/* designing for profile eye icon  */}
             <ProfileModal user={getSenderFull(user, selectedChat.users)} />
           </>
         ) : (
           <>
-            {selectedChat.chatName.toUpperCase()}
+            {/* for selected chat name heading */}
+
+            <div className="" style={{ color: "white", fontFamily: "Tahoma" }}>
+              {selectedChat.chatName.toUpperCase()}{" "}
+            </div>
             <UpdateGroupChatModal
               fetchAgain={fetchAgain}
               setFetchAgain={setFetchAgain}
@@ -189,22 +192,41 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         flexDir="column"
         justifyContent="flex-end"
         p={3}
-        bg="#E8E8E8"
         w="100%"
         h="100%"
         borderRadius="lg"
         overflowY="hidden"
+        // for chat box pannel
+        style={{ background: "#0F1217", color: "rgba(0.4,0.6,0.3,0.8)" }}
       >
         {loading ? (
-          <Spinner size="xl" w={20} h={20} alignSelf="center" margin="auto" />
+          <Spinner
+            size="xl"
+            w={20}
+            h={20}
+            alignSelf="center"
+            margin="auto"
+            color="white"
+          />
         ) : (
           <div className="messages">
             <ScrollableChat messages={messages} />
           </div>
         )}
+        {/* Input box for typing messages  */}
         <FormControl onKeyDown={sendMessage} isRequired mt={3}>
           {isTyping ? (
-            <div>
+            <div
+              style={{
+                margin: "10px",
+                color: "white",
+                width: "90px",
+                borderRadius: "3px",
+                background: "gray",
+                padding: "10px",
+                border: "1px solid white",
+              }}
+            >
               typing....
             </div>
           ) : (
@@ -214,6 +236,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             variant="filled"
             bg="#E0E0E0"
             placeholder="Enter a message.."
+            color="white"
+            background="#BEE3F8"
             value={newMessage}
             onChange={typingHandler}
           />
@@ -226,7 +250,11 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       justifyContent="center"
       style={{ height: "100%", display: "flex" }}
     >
-      <Text fontSize="3xl" pb={3} fontFamily="Work sans">
+      <Text
+        fontSize="3xl"
+        pb={3}
+        style={{ color: "#38B2AC", fontFamily: "Cambria" }}
+      >
         Click on a user to start chatting
       </Text>
     </Box>

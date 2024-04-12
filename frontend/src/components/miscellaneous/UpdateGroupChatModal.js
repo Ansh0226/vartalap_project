@@ -146,7 +146,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain, fetchMessages }) => {
       setLoading(true);
       const config = {
         headers: {
-          Authorization: `Bearer ${user.token}`,
+          Authorization:` Bearer ${user.token}`,
         },
       };
       const { data } = await axios.get(`/api/user?search=${search}`, config);
@@ -222,12 +222,14 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain, fetchMessages }) => {
             fontFamily="Work sans"
             display="flex"
             justifyContent="center"
+            background="#0F1217"
+            color="white"
           >
             {selectedChat.chatName}
           </ModalHeader>
           <ModalCloseButton />
-          <ModalBody>
-            <Box w="100%" display="flex" flexWrap="wrap" pb={3}>
+          <ModalBody style={{background:"black"}}>
+            <Box w="100%" display="flex" flexWrap="wrap" pb={3} >
               {selectedChat.users.map((u) => (
                 <UserBadgeItem
                   key={u._id}
@@ -238,18 +240,18 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain, fetchMessages }) => {
             </Box>
             <FormControl display={"flex"}>
               <Input
-                placeholder="Chat Name Update"
+                placeholder="New Group Name"
                 mb={1}
                 value={groupChatName}
                 onChange={(e) => setGroupChatName(e.target.value)}
               />
-              <Button onClick={() => handleRename(user)} colorScheme="red">
+              <Button onClick={() => handleRename(user)} colorScheme="blue">
                 Update
               </Button>
             </FormControl>
             <FormControl>
               <Input
-                placeholder="Add User to Group"
+                placeholder="Add New User to Group"
                 mb={1}
                 onChange={(e) => handleSearch(e.target.value)}
               />
@@ -268,7 +270,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain, fetchMessages }) => {
             )}
           </ModalBody>
 
-          <ModalFooter>
+          <ModalFooter style={{background:"#0F1217"}}>
             <Button
              
               mr={3}

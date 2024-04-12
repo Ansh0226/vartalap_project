@@ -3,9 +3,10 @@
 .App {
     min-height: 100vh;
     display: flex;
-    background-image: url("./background.png");
+    background-image: url("./pages/2.gif");
     background-position: center;
     background-size: cover;
+    background-repeat: no-repeat;
 }
 
 ::-webkit-scrollbar {

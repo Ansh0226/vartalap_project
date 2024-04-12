@@ -128,17 +128,19 @@ const GroupChatModal = ({ children }) => {
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent >
           <ModalHeader
             fontSize="35px"
             fontFamily="Work sans"
             display="flex"
             justifyContent="center"
+            style={{background: "black", color: "white", }}
           >
             Create Group Chat
           </ModalHeader>
           <ModalCloseButton />
-          <ModalBody display="flex" flexDir="column" alignItems="center">
+          <ModalBody display="flex" flexDir="column" alignItems="center" 
+          style={{background: "black", color: "white"}}>
             <FormControl>
               <Input
                 placeholder="Chat Name"
@@ -153,7 +155,8 @@ const GroupChatModal = ({ children }) => {
                 onChange={(e) => handleSearch(e.target.value)}
               />
             </FormControl>
-            <Box w="100%" display="flex" flexWrap={"wrap"}>
+            <Box w="100%" display="flex" flexWrap={"wrap"}           
+            >
               {" "}
               {selectedUsers.map((u) => (
                 <UserBadgeItem
@@ -180,8 +183,9 @@ const GroupChatModal = ({ children }) => {
             )}
           </ModalBody>
 
-          <ModalFooter>
-            <Button colorScheme="blue" onClick={handleSubmit}>
+          <ModalFooter  style={{ background: "black"}}>
+            <Button colorScheme="blue" onClick={handleSubmit}
+>
               Create Chat
             </Button>
           </ModalFooter>
