@@ -8,9 +8,9 @@ import ChatLoading from "./ChatLoading";
 // import GroupChatModal from "./miscellaneous/GroupChatModal";
 import { Button } from "@chakra-ui/react";
 import { ChatState } from "../Context/ChatProvider";
-import GroupChatModal from "./miscellaneous/GroupChatModal"
+import GroupChatModal from "./miscellaneous/GroupChatModal";
 
-const MyChats = ({fetchAgain}) => {
+const MyChats = ({ fetchAgain }) => {
   const [loggedUser, setLoggedUser] = useState();
 
   const { selectedChat, setSelectedChat, user, chats, setChats } = ChatState();
@@ -56,6 +56,7 @@ const MyChats = ({fetchAgain}) => {
       w={{ base: "100%", md: "31%" }}
       borderRadius="lg"
       borderWidth="1px"
+      style={{ background: "rgba(0,0,0,0.5)" }}
     >
       <Box
         pb={3}
@@ -66,13 +67,20 @@ const MyChats = ({fetchAgain}) => {
         w="100%"
         justifyContent="space-between"
         alignItems="center"
+        style={{
+          background: "black",
+          borderRadius: "7px",
+          color: "#38B2AC",
+          fontFamily: "cursive",
+        }}
       >
         My Chat
         <GroupChatModal>
           <Button
-            d="flex"
+            display="flex"
             fontSize={{ base: "17px", md: "10px", lg: "17px" }}
-            rightIcon={<AddIcon />}
+            rightIcon={<AddIcon color="green" />}
+            style={{ background: "black", color: "white" }}
           >
             New Group Chat
           </Button>
@@ -87,11 +95,13 @@ const MyChats = ({fetchAgain}) => {
         h="100%"
         borderRadius="lg"
         overflowY="hidden"
+        style={{ background: "#0F1217" }}
       >
         {" "}
         {chats ? (
           <Stack overflowY="scroll">
             {chats.map((chat) => (
+              // List for chating persons
               <Box
                 onClick={() => setSelectedChat(chat)}
                 cursor="pointer"
@@ -101,6 +111,11 @@ const MyChats = ({fetchAgain}) => {
                 py={2}
                 borderRadius="lg"
                 key={chat._id}
+                style={{
+                  background: "#38B2AC",
+                  color: "white",
+                  fontFamily: "cursive",
+                }}
               >
                 <Text>
                   {!chat.isGroupChat

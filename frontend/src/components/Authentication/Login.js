@@ -1,16 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-import { Stack, HStack, VStack } from '@chakra-ui/react'
-import { FormControl, FormLabel} from '@chakra-ui/react';
+import { Stack, HStack, VStack, background } from "@chakra-ui/react";
+import { FormControl, FormLabel } from "@chakra-ui/react";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { Button } from "@chakra-ui/button";
 import { useToast } from "@chakra-ui/react";
 import axios from "axios";
-import { useHistory } from 'react-router-dom';
+import { useHistory } from "react-router-dom";
 
 const SignUp = () => {
- 
-const [name, setName] = useState();
+  const [name, setName] = useState();
   const [email, setEmail] = useState();
   const [confirmpassword, setConfirmpassword] = useState();
   const [password, setPassword] = useState();
@@ -18,12 +17,11 @@ const [name, setName] = useState();
   const toast = useToast();
   const history = useHistory();
 
-
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
   const submitHandler = async () => {
     setLoading(true);
-    if (!email || !password ) {
+    if (!email || !password) {
       toast({
         title: "Please Fill all the Feilds",
         status: "warning",
@@ -35,7 +33,6 @@ const [name, setName] = useState();
       return;
     }
 
-
     try {
       const config = {
         headers: {
@@ -44,7 +41,7 @@ const [name, setName] = useState();
       };
       const { data } = await axios.post(
         "/api/user/login",
-        {email, password},
+        { email, password },
         config
       );
       toast({
@@ -56,8 +53,7 @@ const [name, setName] = useState();
       });
       localStorage.setItem("userInfo", JSON.stringify(data));
       setLoading(false);
-      history.push('/chats')
-
+      history.push("/chats");
     } catch (error) {
       toast({
         title: "Error Occured!",
@@ -69,35 +65,31 @@ const [name, setName] = useState();
       });
       setLoading(false);
     }
-
-   };
-
-
-  
-
+  };
 
   return (
-  <VStack spacing='5px' color="black">
-
- <FormControl id="email" isRequired>
-        <FormLabel>Email Address</FormLabel>
+    <VStack spacing="5px" color="black">
+      <FormControl id="email" isRequired>
+        <FormLabel style={{ color: "#38B2AC" }}>Email Address</FormLabel>
         <Input
           type="email"
-          focusBorderColor='black'
+          focusBorderColor="white"
           placeholder="Enter Your Email Address"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          color="white"
         />
       </FormControl>
-       <FormControl id="password" isRequired>
-        <FormLabel>Password</FormLabel>
+      <FormControl id="password" isRequired>
+        <FormLabel style={{ color: "#38B2AC" }}>Password</FormLabel>
         <InputGroup size="md">
           <Input
-            focusBorderColor='black'
+            focusBorderColor="white"
             type={show ? "text" : "password"}
             placeholder="Enter Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            color="white"
           />
           <InputRightElement width="4.5rem">
             <Button h="1.75rem" size="sm" onClick={handleClick}>
@@ -106,21 +98,20 @@ const [name, setName] = useState();
           </InputRightElement>
         </InputGroup>
       </FormControl>
-      
-       
-        <Button
+
+      <Button
         colorScheme="blue"
         width="100%"
         style={{ marginTop: 15 }}
         onClick={submitHandler}
         isLoading={loading}
-        
+        background="#38B2AC"
       >
-      Log In
+        Log In
       </Button>
-       <Button
+      <Button
         variant="solid"
-        colorScheme="red"
+        colorScheme=""
         width="100%"
         onClick={() => {
           setEmail("guest@example.com");
@@ -129,9 +120,8 @@ const [name, setName] = useState();
       >
         Get Guest User Credentials
       </Button>
-
     </VStack>
-  )
-}
+  );
+};
 
-export default SignUp
+export default SignUp;

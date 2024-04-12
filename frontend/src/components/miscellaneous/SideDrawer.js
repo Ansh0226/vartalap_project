@@ -3,7 +3,7 @@ import { Box, Text, Flex } from "@chakra-ui/layout";
 import axios from "axios";
 import { Spinner } from "@chakra-ui/spinner";
 // import { useToast } from "@chakra-ui/toast";
-import { Tooltip } from "@chakra-ui/react";
+import { Tooltip, background } from "@chakra-ui/react";
 import {
   Menu,
   MenuButton,
@@ -37,6 +37,7 @@ import UserListItem from "../UserAvatar/UserListItem";
 import { getSender } from "../../config/ChatLogics";
 import NotificationBadge from "react-notification-badge";
 import { Effect } from "react-notification-badge";
+import { ClassNames } from "@emotion/react";
 const SideDrawer = () => {
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
@@ -122,36 +123,51 @@ const SideDrawer = () => {
 
   return (
     <>
-      <Flex
+      <Box
+        // paddingTop="5px"
+        display="flex"
         justifyContent="space-between"
         alignItems="center"
-        bg="white"
+        bg="black"
+        color="white"
         w="100%"
         p="5px 10px 5px 10px"
-        borderWidth="5px"
+        border="5px solid #20252B"
+        // borderWidth="5px"
+        // style={{borderRadius: "3px"}}
       >
         <Tooltip label="Search Users to Chat" hasArrow placement="bottom-end">
-          <Button variant="ghost" onClick={onOpen}>
-            <i class="fas fa-search"></i>
-            <Text d={{ base: "none", md: "flex" }} px="4">
+          <Button variant="ghost" onClick={onOpen} style={{ color: "white" }}>
+            <i class="fas fa-search" style={{ color: "#38B2AC" }}></i>
+            <Text
+              display={{ base: "none", md: "flex" }}
+              px="4"
+              // background="black"
+              style={{ color: "#38B2AC" }}
+            >
               Search User
             </Text>
           </Button>
         </Tooltip>
 
-        <Text fontSize="2xl" fontFamily="Work sans">
+        <Text
+          fontSize="2xl"
+          fontFamily="cursive"
+          style={{ fontSize: "30px", color: "#38B2AC" }}
+        >
           Vartalap
         </Text>
 
         <div>
           <Menu>
-            <MenuButton p={1}>
-              <BellIcon fontSize="2xl" m={1} />
+            <MenuButton p={1} >
+              <BellIcon fontSize="2xl" m={1} color="#38B2AC" />
             </MenuButton>
             <MenuList pl={2}>
               <NotificationBadge
                 count={notification.length}
                 effect={Effect.SCALE}
+                
               />
               {!notification.length && "No New Messages"}
               {notification.map((notif) => (
@@ -178,23 +194,36 @@ const SideDrawer = () => {
                 src={user.pic}
               />
             </MenuButton>
-            <MenuList>
+            <MenuList style={{ background: "black" }}>
               <ProfileModal user={user}>
-                <MenuItem>My Profile</MenuItem>
+                <MenuItem style={{ background: "black" }}>My Profile</MenuItem>
               </ProfileModal>
 
               <MenuDivider></MenuDivider>
-              <MenuItem onClick={logoutHandler}>Logout</MenuItem>
+              <MenuItem onClick={logoutHandler} style={{ background: "black" }}>
+                Logout
+              </MenuItem>
             </MenuList>
           </Menu>
         </div>
-      </Flex>
+      </Box>
 
       <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
         <DrawerOverlay />
-        <DrawerContent>
-          <DrawerHeader borderBottomWidth={"1px"}>Search User</DrawerHeader>
-          <DrawerBody>
+        <DrawerContent
+        // background="rgba(0,0,0,0.2)"
+        >
+          <DrawerHeader
+            borderBottomWidth={"1px"}
+            background="black"
+            color="#38B2AC"
+            textAlign="center"
+            fontSize="2rem"
+            fontFamily="cursive"
+          >
+            Vartalap{" "}
+          </DrawerHeader>
+          <DrawerBody background="black">
             <Box display="flex" pb={2}>
               <Input
                 placeholder="Search by name or email"
@@ -202,8 +231,16 @@ const SideDrawer = () => {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 onKeyDown={handleSearch}
+                background="black"
+                color="white"
+                border="none"
+                outline="none"
+                style={{ border: "2px solid #38B2AC" }}
+                fontFamily="cursive"
               />
-              <Button onClick={handleSearch}>Go</Button>
+              <Button onClick={handleSearch} background="#38B2AC">
+                Go
+              </Button>
             </Box>
 
             {loading ? (
