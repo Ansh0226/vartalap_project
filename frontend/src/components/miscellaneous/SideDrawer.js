@@ -1,4 +1,4 @@
-import { Box, Text,Flex } from "@chakra-ui/layout";
+import { Box, Text, Flex } from "@chakra-ui/layout";
 
 import axios from "axios";
 import { Spinner } from "@chakra-ui/spinner";
@@ -19,8 +19,8 @@ import {
   DrawerHeader,
   DrawerOverlay,
   DrawerContent,
-    DrawerCloseButton,
-    Input,
+  DrawerCloseButton,
+  Input,
   useToast,
 } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/hooks";
@@ -34,32 +34,27 @@ import ProfileModal from "./ProfileModal";
 import { useHistory } from "react-router-dom";
 import ChatLoading from "../ChatLoading";
 import UserListItem from "../UserAvatar/UserListItem";
-
+import { getSender } from "../../config/ChatLogics";
+import NotificationBadge from "react-notification-badge";
+import { Effect } from "react-notification-badge";
 const SideDrawer = () => {
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingChat, setLoadingChat] = useState(false);
-    const [chats, setChats] = useState([]);
-    const {
-     setSelectedChat,
-     user,
-     notification,
-     setNotification,
-   
-   } = ChatState();
- 
-  
-    const history = useHistory();
-     const toast = useToast();
-     const { isOpen, onOpen, onClose } = useDisclosure();
+  const [chats, setChats] = useState([]);
+  const { setSelectedChat, user, notification, setNotification } = ChatState();
 
-    const logoutHandler = () => {
-        localStorage.removeItem("userInfo");
-        history.push('/')
-    };
-    
-    const handleSearch =  async(event) => {
+  const history = useHistory();
+  const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const logoutHandler = () => {
+    localStorage.removeItem("userInfo");
+    history.push("/");
+  };
+
+  const handleSearch = async (event) => {
     if (!search && event.type === "click") {
       toast({
         title: "Please Enter something in search",
@@ -94,8 +89,7 @@ const SideDrawer = () => {
         position: "bottom-left",
       });
     }
-    };
-    
+  };
 
   const accessChat = async (userId) => {
     console.log(userId);
@@ -126,8 +120,6 @@ const SideDrawer = () => {
     }
   };
 
-
-
   return (
     <>
       <Flex
@@ -156,7 +148,26 @@ const SideDrawer = () => {
             <MenuButton p={1}>
               <BellIcon fontSize="2xl" m={1} />
             </MenuButton>
-            {/* <MenuList></MenuList> */}
+            <MenuList pl={2}>
+              <NotificationBadge
+                count={notification.length}
+                effect={Effect.SCALE}
+              />
+              {!notification.length && "No New Messages"}
+              {notification.map((notif) => (
+                <MenuItem
+                  key={notif._id}
+                  onClick={() => {
+                    setSelectedChat(notif.chat);
+                    setNotification(notification.filter((n) => n !== notif));
+                  }}
+                >
+                  {notif.chat.isGroupChat
+                    ? `New Message in ${notif.chat.chatName}`
+                    : `New Message from ${getSender(user, notif.chat.users)}`}
+                </MenuItem>
+              ))}
+            </MenuList>
           </Menu>
           <Menu>
             <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
@@ -189,9 +200,8 @@ const SideDrawer = () => {
                 placeholder="Search by name or email"
                 mr={2}
                 value={search}
-                 onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => setSearch(e.target.value)}
                 onKeyDown={handleSearch}
-               
               />
               <Button onClick={handleSearch}>Go</Button>
             </Box>
@@ -216,4 +226,3 @@ const SideDrawer = () => {
 };
 
 export default SideDrawer;
-

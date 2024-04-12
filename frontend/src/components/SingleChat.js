@@ -10,16 +10,23 @@ import { Spinner, FormControl, Input, useToast } from "@chakra-ui/react";
 import axios from "axios";
 import "./styles.css";
 import ScrollableChat from "../components/ScrollableChat";
+import io from "socket.io-client";
 
-
+const ENDPOINT = "http://localhost:5000";
+let socket;
+let selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [socketConnected, setSocketConnected] = useState(false);
   const [newMessage, setNewMessage] = useState("");
+  const [typing, setTyping] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
   const toast = useToast();
 
-  const { user, selectedChat, setSelectedChat } = ChatState();
+  const { user, selectedChat, setSelectedChat, notification, setNotification } =
+    ChatState();
 
   const fetchMessages = useCallback(async () => {
     if (!selectedChat) return;
@@ -37,13 +44,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         `/api/message/${selectedChat._id}`,
         config
       );
-      // console.log(messages);
 
-      // setMessages(prevMessages => [...prevMessages, ...data]); // Merge new messages with existing ones
       setMessages(data);
-   
- 
       setLoading(false);
+      socket.emit("join chat", selectedChat._id);
     } catch (error) {
       toast({
         title: "Error Occurred!",
@@ -57,11 +61,54 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   }, [selectedChat, user.token, toast]);
 
   useEffect(() => {
+    socket = io(ENDPOINT);
+    socket.emit("setup", user);
+    socket.on("connected", () => setSocketConnected(true));
+    socket.on("typing", () => setTyping(true));
+    socket.on("stop typing", () => setTyping(false));
+  }, []);
+
+  useEffect(() => {
     fetchMessages();
+
+    selectedChatCompare = selectedChat;
   }, [selectedChat, fetchMessages]);
 
-  const sendMessage = async event => {
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on("message received", (newMessageReceived) => {
+      if (
+        !selectedChat ||
+        selectedChat._id !== newMessageReceived.chat._id
+      ) {
+        if (!notification.includes(newMessageReceived)) {
+          setNotification([newMessageReceived, ...notification]);
+          setFetchAgain(!fetchAgain);
+        }
+      } else {
+        setMessages((prevMessages) => [...prevMessages, newMessageReceived]);
+      }
+    });
+
+    socket.on("typing", () => {
+      setIsTyping(true);
+    });
+
+    socket.on("stop typing", () => {
+      setIsTyping(false);
+    });
+
+    return () => {
+      socket.off("message received");
+      socket.off("typing");
+      socket.off("stop typing");
+    };
+  }, [socket, selectedChat, notification, fetchAgain]);
+
+  const sendMessage = async (event) => {
     if (event.key === "Enter" && newMessage) {
+      socket.emit("stop typing", selectedChat._id);
       try {
         const config = {
           headers: {
@@ -78,15 +125,29 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           },
           config
         );
-        console.log(data);
 
-        setMessages(prevMessages => [...prevMessages, data]); // Append the new message to the existing messages
-      } catch (error) {}
+        socket.emit("new message", data);
+        setMessages([...messages, data]);
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
-  const typingHandler = e => {
+  const typingHandler = (e) => {
     setNewMessage(e.target.value);
+
+    if (!socketConnected) return;
+
+    if (!typing) {
+      setTyping(true);
+      socket.emit("typing", selectedChat._id);
+    }
+
+    setTimeout(() => {
+      setTyping(false);
+      socket.emit("stop typing", selectedChat._id);
+    }, 3000);
   };
 
   return selectedChat ? (
@@ -123,46 +184,41 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         )}
       </Text>
 
-     <Box
-  display="flex"
-  flexDir="column"
-  justifyContent="flex-end"
-  p={3}
-  bg="#E8E8E8"
-  w="100%"
-  h="100%"
-  borderRadius="lg"
-  overflowY="hidden"
->
-  {loading ? (
-    <Spinner 
-    size="xl" 
-    w={20} 
-    h={20} 
-    alignSelf="center"
-     margin="auto"
-      />
-  ) : (
-    
-    // messages.map((message, index) => (
-    //   <Text key={index}>{message.content}</Text> // Render the content of each message
-    // )),
-    <div className="messages">
-                <ScrollableChat messages={messages} />
-              </div>
-
-  )}
-  <FormControl onKeyDown={sendMessage} isRequired mt={3}>
-    <Input
-      variant="filled"
-      bg="#E0E0E0"
-      placeholder="Enter a message.."
-      value={newMessage}
-      onChange={typingHandler}
-    />
-  </FormControl>
-</Box>
-
+      <Box
+        display="flex"
+        flexDir="column"
+        justifyContent="flex-end"
+        p={3}
+        bg="#E8E8E8"
+        w="100%"
+        h="100%"
+        borderRadius="lg"
+        overflowY="hidden"
+      >
+        {loading ? (
+          <Spinner size="xl" w={20} h={20} alignSelf="center" margin="auto" />
+        ) : (
+          <div className="messages">
+            <ScrollableChat messages={messages} />
+          </div>
+        )}
+        <FormControl onKeyDown={sendMessage} isRequired mt={3}>
+          {isTyping ? (
+            <div>
+              typing....
+            </div>
+          ) : (
+            <></>
+          )}
+          <Input
+            variant="filled"
+            bg="#E0E0E0"
+            placeholder="Enter a message.."
+            value={newMessage}
+            onChange={typingHandler}
+          />
+        </FormControl>
+      </Box>
     </>
   ) : (
     <Box
