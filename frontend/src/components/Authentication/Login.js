@@ -35,6 +35,7 @@ const SignUp = () => {
 
     try {
       const config = {
+        // if login successfull
         headers: {
           "Content-type": "application/json",
         },
@@ -53,6 +54,7 @@ const SignUp = () => {
       });
       localStorage.setItem("userInfo", JSON.stringify(data));
       setLoading(false);
+
       history.push("/chats");
     } catch (error) {
       toast({

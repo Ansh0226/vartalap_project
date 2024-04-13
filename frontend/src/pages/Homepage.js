@@ -14,7 +14,6 @@ import Login from "../components/Authentication/Login";
 import SignUp from "../components/Authentication/SignUp";
 import { useHistory } from "react-router-dom";
 
-
 const Homepage = () => {
   const history = useHistory();
   useEffect(() => {
@@ -52,19 +51,30 @@ const Homepage = () => {
         </Text>
       </Box>
       <Box
-        bg="#FEEEFB "
         w="100%"
         p={4}
         borderRadius="lg"
         borderWidth={"1px"}
         background="rgba(0,0,0,0.8)"
         color="white"
-        
+        style={{ borderRadius: "10px" }}
       >
-        <Tabs variant="soft-rounded" color="white">
-          <TabList mb="1em" style={{ background: "#38B2AC" }}>
-            <Tab width={"50%"}>Login</Tab>
-            <Tab width={"50%"}>Sign Up</Tab>
+        <Tabs variant="soft-rounded">
+          <TabList mb="1em">
+            <Tab
+              width={"50%"}
+              color="white"
+              _selected={{ backgroundColor: "#38B2AC" }}
+            >
+              Login
+            </Tab>
+            <Tab
+              width={"50%"}
+              color={"white"}
+              _selected={{ backgroundColor: "#38B2AC" }}
+            >
+              Sign Up
+            </Tab>
           </TabList>
           <TabPanels>
             <TabPanel>

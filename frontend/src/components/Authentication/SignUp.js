@@ -10,16 +10,18 @@ import { useHistory } from "react-router-dom";
 
 const SignUp = () => {
   const [show, setShow] = useState(false);
+  const [show1, setShow1] = useState(false);
   const [name, setName] = useState();
   const [email, setEmail] = useState();
   const [confirmpassword, setConfirmpassword] = useState();
   const [password, setPassword] = useState();
-  const [pic, setPic] = useState();
+  const [pic, setPic] = useState(false);
   const [loading, setLoading] = useState(false);
   const toast = useToast();
   const history = useHistory();
 
   const handleClick = () => setShow(!show);
+  const handleClick1 = () => setShow1(!show1);
   const postDetails = (pics) => {
     setLoading(true);
     if (pics === undefined) {
@@ -170,7 +172,7 @@ const SignUp = () => {
         <FormLabel style={{ color: "#38B2AC" }}>Confirm Password</FormLabel>
         <InputGroup size="md">
           <Input
-            type={show ? "text" : "password"}
+            type={show1 ? "text" : "password"}
             placeholder="Confirm password"
             focusBorderColor="white"
             onChange={(e) => setConfirmpassword(e.target.value)}
@@ -180,10 +182,10 @@ const SignUp = () => {
             <Button
               h="1.75rem"
               size="sm"
-              onClick={handleClick}
+              onClick={handleClick1}
               style={{ background: "#38B2AC" }}
             >
-              {show ? "Hide" : "Show"}
+              {show1? "Hide" : "Show"}
             </Button>
           </InputRightElement>
         </InputGroup>
